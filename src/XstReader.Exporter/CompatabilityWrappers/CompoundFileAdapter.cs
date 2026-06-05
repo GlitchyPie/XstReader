@@ -20,7 +20,7 @@
 
         public void Close()
         {
-            RootStorage.Root.Dispose();
+            RootStorage.Dispose();
             _baseStream.Close();
             _baseStream.Dispose();
         }
@@ -33,7 +33,7 @@
         }
         public void Save(Stream stream)
         {
-            RootStorage.Root.Flush(true);
+            RootStorage.Flush(true);
             _baseStream.Seek(0, SeekOrigin.Begin);
             _baseStream.CopyTo(stream);
         }

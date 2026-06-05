@@ -5,15 +5,16 @@ namespace XstReader.Exporter.CompatabilityWrappers
 {
     internal class StorageAdapter : StorageAdapterBase
     {
-        public Storage Store { get; }
+        internal Storage _store;
+
         public StorageAdapter(Storage root)
         {
-            Store = root;
+            _store = root;
         }
 
         public override bool TryGetStorage(string name, out StorageAdapter? storage)
         {
-            bool r = Store.TryOpenStorage(name, out Storage? store);
+            bool r = _store.TryOpenStorage(name, out Storage? store);
             if (r)
             {
                 storage = new StorageAdapter(store);
@@ -31,15 +32,15 @@ namespace XstReader.Exporter.CompatabilityWrappers
         }
         public override bool TryGetStream(string name, out CfbStreamAdapter? stream)
         {
-            bool r = Store.TryOpenStream(name, out CfbStream? str);
+            bool r = _store.TryOpenStream(name, out CfbStream? str);
             if (r)
             {
-                stream = new CfbStreamAdapter(str,name, Store);
+                stream = new CfbStreamAdapter(str,name, _store);
                 return true;
             }
             else if (str != null)
             {
-                stream = new CfbStreamAdapter(str,name, Store);
+                stream = new CfbStreamAdapter(str,name, _store);
             }
             else
             {
@@ -51,19 +52,19 @@ namespace XstReader.Exporter.CompatabilityWrappers
 
         public override StorageAdapter AddStorage(string name)
         {
-            return new StorageAdapter(Store.CreateStorage(name));
+            return new StorageAdapter(_store.CreateStorage(name));
         }
         public override CfbStreamAdapter AddStream(string name)
         {
-            return new CfbStreamAdapter(Store.CreateStream(name), name, Store);
+            return new CfbStreamAdapter(_store.CreateStream(name), name, _store);
         }
         public override StorageAdapter GetStorage(string name)
         {
-            return new StorageAdapter(Store.OpenStorage(name));
+            return new StorageAdapter(_store.OpenStorage(name));
         }
         public override CfStreamAdapterBase GetStream(string name)
         {
-            return new CfbStreamAdapter(Store.OpenStream(name), name, Store);
+            return new CfbStreamAdapter(_store.OpenStream(name), name, _store);
         }
 
     }

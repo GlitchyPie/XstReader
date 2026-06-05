@@ -3,17 +3,17 @@
 namespace XstReader.Exporter.CompatabilityWrappers
 
 {
-    internal class RootStorageAdapter : StorageAdapterBase
+    internal class RootStorageAdapter : StorageAdapterBase,IDisposable
     {
-        public RootStorage Root { get; }
+        internal RootStorage _root;
         public RootStorageAdapter(RootStorage root)
         {
-            Root = root;
+            _root = root;
         }
 
         public override bool TryGetStorage(string name, out StorageAdapter? storage)
         {
-            bool r = Root.TryOpenStorage(name, out Storage? store);
+            bool r = _root.TryOpenStorage(name, out Storage? store);
             if (r)
             {
                 storage = new StorageAdapter(store);
@@ -30,15 +30,15 @@ namespace XstReader.Exporter.CompatabilityWrappers
         }
         public override bool TryGetStream(string name, out CfbStreamAdapter? stream)
         {
-            bool r = Root.TryOpenStream(name, out CfbStream? str);
+            bool r = _root.TryOpenStream(name, out CfbStream? str);
             if (r)
             {
-                stream = new CfbStreamAdapter(str, name, Root);
+                stream = new CfbStreamAdapter(str, name, _root);
                 return true;
             }
             else if (str != null)
             {
-                stream = new CfbStreamAdapter(str, name, Root);
+                stream = new CfbStreamAdapter(str, name, _root);
             }
             else
             {
@@ -49,20 +49,30 @@ namespace XstReader.Exporter.CompatabilityWrappers
         }
         public override StorageAdapter GetStorage(string name)
         {
-            return new StorageAdapter(Root.OpenStorage(name));
+            return new StorageAdapter(_root.OpenStorage(name));
         }
 
         public override StorageAdapter AddStorage(string name)
         {
-            return new StorageAdapter(Root.CreateStorage(name));
+            return new StorageAdapter(_root.CreateStorage(name));
         }
         public override CfbStreamAdapter AddStream(string name)
         {
-            return new CfbStreamAdapter(Root.CreateStream(name), name, Root);
+            return new CfbStreamAdapter(_root.CreateStream(name), name, _root);
         }
         public override CfStreamAdapterBase GetStream(string name)
         {
-            return new CfbStreamAdapter(Root.OpenStream(name), name, Root);
+            return new CfbStreamAdapter(_root.OpenStream(name), name, _root);
+        }
+
+        public void Flush(bool consolidate = false)
+        {
+            _root.Flush(consolidate);
+        }
+
+        public void Dispose()
+        {
+            _root.Dispose();
         }
     }
 }
