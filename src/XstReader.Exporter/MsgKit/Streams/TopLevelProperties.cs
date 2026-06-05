@@ -28,6 +28,7 @@ using System;
 using System.IO;
 using XstReader.Exporter.MsgKit.Structures;
 using OpenMcdf;
+using XstReader.Exporter.CompatabilityWrappers;
 
 namespace XstReader.Exporter.MsgKit.Streams
 {
@@ -61,10 +62,10 @@ namespace XstReader.Exporter.MsgKit.Streams
         #region Constructor
         /// <summary>
         ///     Create this object and reads all the <see cref="Property">properties</see> from 
-        ///     the given <see cref="CFStream"/>
+        ///     the given <see cref="CfbStream"/>
         /// </summary>
-        /// <param name="stream">The <see cref="CFStream"/></param>
-        internal TopLevelProperties(CFStream stream)
+        /// <param name="stream">The <see cref="CfbStream"/></param>
+        internal TopLevelProperties(CfStreamAdapterBase stream)
         {
             using (var memoryStream = new MemoryStream(stream.GetData()))
             using (var binaryReader = new BinaryReader(memoryStream))
@@ -89,7 +90,7 @@ namespace XstReader.Exporter.MsgKit.Streams
 
         #region WriteProperties
         /// <summary>
-        ///     Writes all <see cref="Property">properties</see> either as a <see cref="CFStream"/> or as a collection in
+        ///     Writes all <see cref="Property">properties</see> either as a <see cref="CfbStream"/> or as a collection in
         ///     a <see cref="PropertyTags.PropertiesStreamName"/> stream to the given <paramref name="storage"/>, this depends 
         ///     on the <see cref="Enums.PropertyType"/>
         /// </summary>
@@ -97,12 +98,12 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     See the <see cref="Properties"/> class it's <see cref="Properties.WriteProperties"/> method for the logic
         ///     that is used to determine this
         /// </remarks>
-        /// <param name="storage">The <see cref="CFStorage"/></param>
+        /// <param name="storage">The <see cref="StorageAdapterBase"/></param>
         /// <param name="messageSize">Used to calculate the exact size of the <see cref="Message"/></param>
         /// <returns>
         ///     Total size of the written <see cref="Properties"/>
         /// </returns>
-        internal long WriteProperties(CFStorage storage, long? messageSize = null)
+        internal long WriteProperties(StorageAdapterBase storage, long? messageSize = null)
         {
             using (var memoryStream = new MemoryStream())
             using (var binaryWriter = new BinaryWriter(memoryStream))

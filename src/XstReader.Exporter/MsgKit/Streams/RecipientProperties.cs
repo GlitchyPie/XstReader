@@ -22,6 +22,7 @@
 using System.IO;
 using XstReader.Exporter.MsgKit.Structures;
 using OpenMcdf;
+using XstReader.Exporter.CompatabilityWrappers;
 
 namespace XstReader.Exporter.MsgKit.Streams
 {
@@ -41,10 +42,10 @@ namespace XstReader.Exporter.MsgKit.Streams
 
         /// <summary>
         ///     Creates this object and reads all the <see cref="Property">properties</see> 
-        ///     from the given <see cref="CFStream"/>
+        ///     from the given <see cref="CfbStream"/>
         /// </summary>
-        /// <param name="stream">The <see cref="CFStream"/></param>
-        internal RecipientProperties(CFStream stream)
+        /// <param name="stream">The <see cref="CfbStream"/></param>
+        internal RecipientProperties(CfStreamAdapterBase stream)
         {
             using (var memoryStream = new MemoryStream(stream.GetData()))
             using (var binaryReader = new BinaryReader(memoryStream))
@@ -57,7 +58,7 @@ namespace XstReader.Exporter.MsgKit.Streams
 
         #region WriteProperties
         /// <summary>
-        ///     Writes all <see cref="Property">properties</see> either as a <see cref="CFStream"/> or as a collection in
+        ///     Writes all <see cref="Property">properties</see> either as a <see cref="CfbStream"/> or as a collection in
         ///     a <see cref="PropertyTags.PropertiesStreamName"/> stream to the given storage, this depends 
         ///     on the <see cref="Enums.PropertyType"/>
         /// </summary>
@@ -65,11 +66,11 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     See the <see cref="Properties"/> class it's <see cref="Properties.WriteProperties"/> method for the logic
         ///     that is used to determine this
         /// </remarks>
-        /// <param name="storage">The <see cref="CFStorage"/></param>
+        /// <param name="storage">The <see cref="StorageAdapterBase"/></param>
         /// <returns>
         ///     Total size of the written <see cref="Properties"/>
         /// </returns>
-        internal long WriteProperties(CFStorage storage)
+        internal long WriteProperties(StorageAdapterBase storage)
         {
             using (var memoryStream = new MemoryStream())
             using (var binaryWriter = new BinaryWriter(memoryStream))

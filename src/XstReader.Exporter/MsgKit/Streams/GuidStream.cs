@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using XstReader.Exporter.MsgKit.Helpers;
 using OpenMcdf;
+using XstReader.Exporter.CompatabilityWrappers;
 
 namespace XstReader.Exporter.MsgKit.Streams
 {
@@ -30,8 +31,8 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     Creates this object and reads all the <see cref="Guid" /> objects from 
         ///     the given <paramref name="storage"/>
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage"/> that containts the <see cref="PropertyTags.GuidStream"/></param>
-        internal GuidStream(CFStorage storage)
+        /// <param name="storage">The <see cref="StorageAdapterBase"/> that containts the <see cref="PropertyTags.GuidStream"/></param>
+        internal GuidStream(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.GuidStream);
 
@@ -47,11 +48,11 @@ namespace XstReader.Exporter.MsgKit.Streams
 
         #region Write
         /// <summary>
-        ///     Writes all the <see cref="Guid"/>'s as a <see cref="CFStream" /> to the
+        ///     Writes all the <see cref="Guid"/>'s as a <see cref="CfbStream" /> to the
         ///     given <paramref name="storage" />
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage" /></param>
-        internal void Write(CFStorage storage)
+        /// <param name="storage">The <see cref="StorageAdapterBase" /></param>
+        internal void Write(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.GuidStream);
             using (var memoryStream = new MemoryStream())

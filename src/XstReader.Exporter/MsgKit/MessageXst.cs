@@ -10,6 +10,7 @@
 
 using OpenMcdf;
 using XstReader.ElementProperties;
+using XstReader.Exporter.CompatabilityWrappers;
 using XstReader.Exporter.MsgKit.Enums;
 using XstReader.Exporter.MsgKit.Helpers;
 using XstReader.Exporter.MsgKit.Streams;
@@ -26,7 +27,7 @@ namespace XstReader.Exporter.MsgKit
             ClassAsString = xstMessage.PropertyValue(PropertyCanonicalName.PidTagMessageClass);
         }
 
-        private long WriteToStorageRecipients(CFStorage rootStorage)
+        private long WriteToStorageRecipients(StorageAdapterBase rootStorage)
         {
             long size = 0;
             var index = 0;
@@ -38,7 +39,7 @@ namespace XstReader.Exporter.MsgKit
             }
             return size;
         }
-        private long WritePropertiesRecipient(CFStorage storage, XstRecipient recipient, long index)
+        private long WritePropertiesRecipient(StorageAdapterBase storage, XstRecipient recipient, long index)
         {
             var propertiesStream = new RecipientProperties();
             propertiesStream.AddProperty(PropertyTags.PR_ROWID, index);
@@ -49,7 +50,7 @@ namespace XstReader.Exporter.MsgKit
             return propertiesStream.WriteProperties(storage);
         }
 
-        private long WriteToStorageAttachments(CFStorage rootStorage)
+        private long WriteToStorageAttachments(StorageAdapterBase rootStorage)
         {
             long size = 0;
             var index = 0;
@@ -62,7 +63,7 @@ namespace XstReader.Exporter.MsgKit
 
             return size;
         }
-        private long WritePropertiesAttachment(CFStorage storage, int index, XstAttachment attachment)
+        private long WritePropertiesAttachment(StorageAdapterBase storage, int index, XstAttachment attachment)
         {
             var propertiesStream = new AttachmentProperties();
 

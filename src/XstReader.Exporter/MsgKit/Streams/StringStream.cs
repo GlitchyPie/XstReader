@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using XstReader.Exporter.MsgKit.Helpers;
 using OpenMcdf;
+using XstReader.Exporter.CompatabilityWrappers;
 
 namespace XstReader.Exporter.MsgKit.Streams
 {
@@ -32,8 +33,8 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     Creates this object and reads all the <see cref="StringStreamItem" /> objects 
         ///     from the given <paramref name="storage"/>
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage"/> that contains the <see cref="PropertyTags.EntryStream"/></param>
-        internal StringStream(CFStorage storage)
+        /// <param name="storage">The <see cref="StorageAdapterBase"/> that contains the <see cref="PropertyTags.EntryStream"/></param>
+        internal StringStream(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.StringStream);
             using (var memoryStream = new MemoryStream(stream.GetData()))
@@ -48,11 +49,11 @@ namespace XstReader.Exporter.MsgKit.Streams
 
         #region Write
         /// <summary>
-        ///     Writes all the <see cref="StringStream"/>'s as a <see cref="CFStream" /> to the
+        ///     Writes all the <see cref="StringStream"/>'s as a <see cref="CfbStream" /> to the
         ///     given <paramref name="storage" />
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage" /></param>
-        internal void Write(CFStorage storage)
+        /// <param name="storage">The <see cref="StorageAdapterBase" /></param>
+        internal void Write(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.StringStream);
             using (var memoryStream = new MemoryStream())

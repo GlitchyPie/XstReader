@@ -30,6 +30,7 @@ using System.Linq;
 using XstReader.Exporter.MsgKit.Enums;
 using XstReader.Exporter.MsgKit.Structures;
 using OpenMcdf;
+using XstReader.Exporter.CompatabilityWrappers;
 
 namespace XstReader.Exporter.MsgKit.Streams
 {
@@ -85,14 +86,14 @@ namespace XstReader.Exporter.MsgKit.Streams
         
         #region WriteProperties
         /// <summary>
-        ///     Writes the properties to the <see cref="CFStorage" />
+        ///     Writes the properties to the <see cref="StorageAdapterBase" />
         /// </summary>
         /// <param name="storage"></param>
         /// <param name="messageSize"></param>
         /// <remarks>
         ///     Unfortunately this is going to have to be used after we already written the top level properties.
         /// </remarks>
-        internal void WriteProperties(CFStorage storage, long messageSize = 0)
+        internal void WriteProperties(StorageAdapterBase storage, long messageSize = 0)
         {
             // Grab the nameIdStorage, 3.1 on the SPEC
             storage = storage.GetStorage(PropertyTags.NameIdStorage);

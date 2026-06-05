@@ -26,6 +26,7 @@
 
 using OpenMcdf;
 using System.Text;
+using XstReader.Exporter.CompatabilityWrappers;
 using XstReader.Exporter.MsgKit.Enums;
 using XstReader.Exporter.MsgKit.Helpers;
 
@@ -69,17 +70,17 @@ namespace XstReader.Exporter.MsgKit.Structures
 
         #region WriteProperties
         /// <summary>
-        ///     Writes all <see cref="Property">properties</see> either as a <see cref="CFStream"/> or as a collection in
+        ///     Writes all <see cref="Property">properties</see> either as a <see cref="CfbStream"/> or as a collection in
         ///     a <see cref="PropertyTags.PropertiesStreamName"/> stream to the given <paramref name="storage"/>, this depends 
         ///     on the <see cref="PropertyType"/>
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage"/></param>
+        /// <param name="storage">The <see cref="StorageAdapterBase"/></param>
         /// <param name="binaryWriter">The <see cref="BinaryWriter" /></param>
         /// <param name="messageSize">Used to calculate the exact size of the <see cref="Message"/></param>
         /// <returns>
         ///     Total size of the written <see cref="Properties"/>
         /// </returns>
-        internal long WriteProperties(CFStorage storage, BinaryWriter binaryWriter, long? messageSize = null)
+        internal long WriteProperties(StorageAdapterBase storage, BinaryWriter binaryWriter, long? messageSize = null)
         {
             long size = 0;
 

@@ -32,6 +32,7 @@ using XstReader.Exporter.MsgKit.Streams;
 using OpenMcdf;
 using XstReader;
 using XstReader.ElementProperties;
+using XstReader.Exporter.CompatabilityWrappers;
 
 // ReSharper disable InconsistentNaming
 
@@ -53,7 +54,7 @@ namespace XstReader.Exporter.MsgKit
         /// <summary>
         ///     The <see cref="CompoundFile" />
         /// </summary>
-        internal CompoundFile CompoundFile { get; }
+        internal CompoundFileAdapter CompoundFile { get; }
 
         /// <summary>
         ///     The <see cref="MessageClass"/>
@@ -162,7 +163,7 @@ namespace XstReader.Exporter.MsgKit
         /// </summary>
         internal Message()
         {
-            CompoundFile = new CompoundFile();
+            CompoundFile = new CompoundFileAdapter();
 
             // In the preceding figure, the "__nameid_version1.0" named property mapping storage contains the 
             // three streams  used to provide a mapping from property ID to property name 

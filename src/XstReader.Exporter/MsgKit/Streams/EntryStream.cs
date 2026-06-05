@@ -31,6 +31,7 @@ using System.IO;
 using XstReader.Exporter.MsgKit.Enums;
 using XstReader.Exporter.MsgKit.Helpers;
 using OpenMcdf;
+using XstReader.Exporter.CompatabilityWrappers;
 
 namespace XstReader.Exporter.MsgKit.Streams
 {
@@ -62,8 +63,8 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     Creates this object and reads all the <see cref="EntryStreamItem" /> objects from 
         ///     the given <paramref name="storage"/>
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage"/> that containts the <see cref="PropertyTags.EntryStream"/></param>
-        internal EntryStream(CFStorage storage)
+        /// <param name="storage">The <see cref="StorageAdapterBase"/> that containts the <see cref="PropertyTags.EntryStream"/></param>
+        internal EntryStream(StorageAdapterBase storage)
         {
             if (!storage.TryGetStream(PropertyTags.EntryStream, out var stream)) 
                 stream = storage.AddStream(PropertyTags.EntryStream);
@@ -80,11 +81,11 @@ namespace XstReader.Exporter.MsgKit.Streams
 
         #region Write
         /// <summary>
-        ///     Writes all the <see cref="EntryStreamItem"/>'s as a <see cref="CFStream" /> to the
+        ///     Writes all the <see cref="EntryStreamItem"/>'s as a <see cref="CfbStream" /> to the
         ///     given <paramref name="storage" />
         /// </summary>
-        /// <param name="storage">The <see cref="CFStorage" /></param>
-        internal void Write(CFStorage storage)
+        /// <param name="storage">The <see cref="StorageAdapterBase" /></param>
+        internal void Write(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.EntryStream);
             using (var memoryStream = new MemoryStream())
@@ -96,7 +97,7 @@ namespace XstReader.Exporter.MsgKit.Streams
                 stream.SetData(memoryStream.ToArray());
             }
         }
-        internal void Write(CFStorage storage, string streamName)
+        internal void Write(StorageAdapterBase storage, string streamName)
         {
             if(!storage.TryGetStream(streamName, out var stream))
                 stream = storage.AddStream(streamName);
