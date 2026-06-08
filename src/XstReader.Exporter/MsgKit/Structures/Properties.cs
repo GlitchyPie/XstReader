@@ -25,6 +25,7 @@
 //
 
 using OpenMcdf;
+using System.Runtime.InteropServices;
 using System.Text;
 using XstReader.Exporter.CompatabilityWrappers;
 using XstReader.Exporter.MsgKit.Enums;
@@ -525,7 +526,25 @@ namespace XstReader.Exporter.MsgKit.Structures
                             break;
 
                         case TypeCode.Object:
-                            data = (byte[])obj;
+                            if (obj is byte[] v)
+                            {
+                                data = v;
+                                break;
+                            }
+
+                            int size = Marshal.SizeOf(obj);
+                            IntPtr ptr = Marshal.AllocHGlobal(size);
+                            data = new byte[size];
+                            try
+                            {
+                                Marshal.StructureToPtr(obj, ptr, false);
+                                Marshal.Copy(ptr, data, 0, size);
+                            }
+                            finally
+                            {
+                                Marshal.FreeHGlobal(ptr);
+                            }
+                            
                             break;
 
                         default:
