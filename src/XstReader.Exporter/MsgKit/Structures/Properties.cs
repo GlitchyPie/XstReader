@@ -134,7 +134,7 @@ namespace XstReader.Exporter.MsgKit.Structures
                         // Write the length of the property to the propertiesstream
                         binaryWriter.Write(property.Data.Length + 2);
                         binaryWriter.Write(new byte[4]);
-                        storage.AddStream(property.Name).SetData(property.Data);
+                        storage.AddData(property.Name, property.Data);
                         size += property.Data.LongLength;
                         break;
 
@@ -142,7 +142,7 @@ namespace XstReader.Exporter.MsgKit.Structures
                         // Write the length of the property to the propertiesstream
                         binaryWriter.Write(property.Data.Length + 1);
                         binaryWriter.Write(new byte[4]);
-                        storage.AddStream(property.Name).SetData(property.Data);
+                        storage.AddData(property.Name, property.Data);
                         size += property.Data.LongLength;
                         break;
 
@@ -158,7 +158,7 @@ namespace XstReader.Exporter.MsgKit.Structures
                             binaryWriter.Write(new byte[4]);
                             size += property.Data.LongLength;
                         }
-                        storage.AddStream(property.Name).SetData(property.Data);
+                        storage.AddData(property.Name, property.Data);
                         break;
 
                     case PropertyType.PT_CLSID:
@@ -176,7 +176,7 @@ namespace XstReader.Exporter.MsgKit.Structures
                         // Write the length of the property to the propertiesstream
                         binaryWriter.Write(property.Data.Length);
                         binaryWriter.Write(new byte[4]);
-                        storage.AddStream(property.Name).SetData(property.Data);
+                        storage.AddData(property.Name, property.Data);
                         size += property.Data.LongLength;
                         break;
 
@@ -218,12 +218,19 @@ namespace XstReader.Exporter.MsgKit.Structures
                 binaryWriter.Write(new byte[4]);
             }
 
+            
             // Make the properties stream
+            binaryWriter.Flush();
             binaryWriter.BaseStream.Position = 0;
+
             if (!storage.TryGetStream(PropertyTags.PropertiesStreamName, out var propertiesStream))
                 propertiesStream = storage.AddStream(PropertyTags.PropertiesStreamName);
 
-            propertiesStream.SetData(binaryWriter.BaseStream.ToByteArray());
+            propertiesStream.Seek(0, SeekOrigin.Begin);
+            propertiesStream.SetLength(0);
+            binaryWriter.BaseStream.CopyTo(propertiesStream);
+            propertiesStream.Flush();
+
             return size + binaryWriter.BaseStream.Length;
         }
         #endregion

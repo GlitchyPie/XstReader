@@ -172,12 +172,9 @@ namespace XstReader.Exporter.MsgKit
             if (!CompoundFile.RootStorage.TryGetStorage(PropertyTags.NameIdStorage, out var nameIdStorage))
                 nameIdStorage = CompoundFile.RootStorage.AddStorage(PropertyTags.NameIdStorage);
 
-            var entryStream = nameIdStorage.AddStream(PropertyTags.EntryStream);
-            entryStream.SetData(new byte[0]);
-            var stringStream = nameIdStorage.AddStream(PropertyTags.StringStream);
-            stringStream.SetData(new byte[0]);
-            var guidStream = nameIdStorage.AddStream(PropertyTags.GuidStream);
-            guidStream.SetData(new byte[0]);
+            nameIdStorage.AddData(PropertyTags.EntryStream, Array.Empty<byte>());
+            nameIdStorage.AddData(PropertyTags.StringStream, Array.Empty<byte>());
+            nameIdStorage.AddData(PropertyTags.GuidStream, Array.Empty<byte>());
 
             TopLevelProperties = new TopLevelProperties();
             NamedProperties = new NamedProperties(TopLevelProperties);

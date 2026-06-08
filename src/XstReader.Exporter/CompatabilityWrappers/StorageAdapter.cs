@@ -58,6 +58,13 @@ namespace XstReader.Exporter.CompatabilityWrappers
         {
             return new CfbStreamAdapter(_store.CreateStream(name), name, _store);
         }
+        public override void AddData(string name, byte[] data)
+        {
+            using CfbStream stream = _store.CreateStream(name);
+            stream.Write(data, 0 , data.Length);
+            stream.Flush();
+        }
+
         public override StorageAdapter GetStorage(string name)
         {
             return new StorageAdapter(_store.OpenStorage(name));

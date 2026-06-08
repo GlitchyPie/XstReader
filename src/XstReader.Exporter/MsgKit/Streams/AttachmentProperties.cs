@@ -52,12 +52,10 @@ namespace XstReader.Exporter.MsgKit.Streams
         /// <param name="stream">The <see cref="CfbStream"/></param>
         internal AttachmentProperties(CfStreamAdapterBase stream)
         {
-            using (var memoryStream = new MemoryStream(stream.GetData()))
-            using (var binaryReader = new BinaryReader(memoryStream))
-            {
-                binaryReader.ReadBytes(8);
-                ReadProperties(binaryReader);
-            }
+            stream.Seek(0, SeekOrigin.Begin); // Could this be Seek(9) instead?
+            using BinaryReader reader = new(stream, System.Text.Encoding.UTF8, true);
+            reader.ReadBytes(8);
+            ReadProperties(reader);
         }
         #endregion
 

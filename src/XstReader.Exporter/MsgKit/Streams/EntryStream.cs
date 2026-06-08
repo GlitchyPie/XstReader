@@ -69,13 +69,13 @@ namespace XstReader.Exporter.MsgKit.Streams
             if (!storage.TryGetStream(PropertyTags.EntryStream, out var stream)) 
                 stream = storage.AddStream(PropertyTags.EntryStream);
 
-            using (var memoryStream = new MemoryStream(stream.GetData()))
-            using (var binaryReader = new BinaryReader(memoryStream))
-                while (!binaryReader.Eos())
-                {
-                    var entryStreamItem = new EntryStreamItem(binaryReader);
-                    Add(entryStreamItem);
-                }
+            stream.Seek(0, SeekOrigin.Begin);
+            using BinaryReader reader= new(stream, System.Text.Encoding.UTF8, true);
+            while (!reader.Eos())
+            {
+                var entryStreamItem = new EntryStreamItem(reader);
+                Add(entryStreamItem);
+            }
         }
         #endregion
 
@@ -88,28 +88,31 @@ namespace XstReader.Exporter.MsgKit.Streams
         internal void Write(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.EntryStream);
-            using (var memoryStream = new MemoryStream())
-            using (var binaryWriter = new BinaryWriter(memoryStream))
-            {
-                foreach (var entryStreamItem in this)
-                    entryStreamItem.Write(binaryWriter);
+            
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.SetLength(0);
 
-                stream.SetData(memoryStream.ToArray());
-            }
+            using BinaryWriter writer = new(stream, System.Text.Encoding.UTF8, true);
+            foreach (var entryStreamItem in this)
+                entryStreamItem.Write(writer);
         }
         internal void Write(StorageAdapterBase storage, string streamName)
         {
-            if(!storage.TryGetStream(streamName, out var stream))
-                stream = storage.AddStream(streamName);
-
-            using (var memoryStream = new MemoryStream())
-            using (var binaryWriter = new BinaryWriter(memoryStream))
+            if (!storage.TryGetStream(streamName, out var stream))
             {
-                foreach (var entryStreamItem in this)
-                    entryStreamItem.Write(binaryWriter);
-
-                stream.SetData(memoryStream.ToArray());
+                stream = storage.AddStream(streamName);
             }
+            else
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.SetLength(0);
+            }
+
+            using BinaryWriter writer = new(stream, System.Text.Encoding.UTF8, true);
+            foreach (var entryStreamItem in this)
+                entryStreamItem.Write(writer);
+            writer.Flush();
+            stream.Flush();
         }
 
         #endregion

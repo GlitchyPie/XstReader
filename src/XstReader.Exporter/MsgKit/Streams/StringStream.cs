@@ -37,13 +37,13 @@ namespace XstReader.Exporter.MsgKit.Streams
         internal StringStream(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.StringStream);
-            using (var memoryStream = new MemoryStream(stream.GetData()))
-            using (var binaryReader = new BinaryReader(memoryStream))
-                while (!binaryReader.Eos())
-                {
-                    var stringStreamItem = new StringStreamItem(binaryReader);
-                    Add(stringStreamItem);
-                }
+            stream.Seek(0, SeekOrigin.Begin);
+            using BinaryReader reader = new(stream, System.Text.Encoding.UTF8, true);
+            while (!reader.Eos())
+            {
+                var stringStreamItem = new StringStreamItem(reader);
+                Add(stringStreamItem);
+            }
         }
         #endregion
 
@@ -56,14 +56,11 @@ namespace XstReader.Exporter.MsgKit.Streams
         internal void Write(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.StringStream);
-            using (var memoryStream = new MemoryStream())
-            using (var binaryWriter = new BinaryWriter(memoryStream))
-            {
-                foreach (var stringStreamItem in this)
-                    stringStreamItem.Write(binaryWriter);
-
-                stream.SetData(memoryStream.ToArray());
-            }
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.SetLength(0);
+            using BinaryWriter writer = new(stream, System.Text.Encoding.UTF8, true);
+            foreach (var stringStreamItem in this)
+                stringStreamItem.Write(writer);
         }
         #endregion
     }

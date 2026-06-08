@@ -12,6 +12,8 @@
         public abstract StorageAdapterBase AddStorage(string name);
 
         public abstract CfbStreamAdapter AddStream(string name);
+        public abstract void AddData(string name, byte[] data);
+
 
         public abstract StorageAdapterBase GetStorage(string name);
 

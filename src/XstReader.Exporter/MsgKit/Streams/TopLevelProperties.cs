@@ -67,17 +67,15 @@ namespace XstReader.Exporter.MsgKit.Streams
         /// <param name="stream">The <see cref="CfbStream"/></param>
         internal TopLevelProperties(CfStreamAdapterBase stream)
         {
-            using (var memoryStream = new MemoryStream(stream.GetData()))
-            using (var binaryReader = new BinaryReader(memoryStream))
-            {
-                binaryReader.ReadBytes(8); // Reserved
-                NextRecipientId = Convert.ToInt32(binaryReader.ReadUInt32());
-                NextAttachmentId = Convert.ToInt32(binaryReader.ReadUInt32());
-                RecipientCount = Convert.ToInt32(binaryReader.ReadUInt32());
-                AttachmentCount = Convert.ToInt32(binaryReader.ReadUInt32());
-                binaryReader.ReadBytes(8); // Reserved
-                ReadProperties(binaryReader);
-            }
+            stream.Seek(0, SeekOrigin.Begin);
+            using BinaryReader reader = new(stream, System.Text.Encoding.UTF8, true);
+            reader.ReadBytes(8); // Reserved
+            NextRecipientId = Convert.ToInt32(reader.ReadUInt32());
+            NextAttachmentId = Convert.ToInt32(reader.ReadUInt32());
+            RecipientCount = Convert.ToInt32(reader.ReadUInt32());
+            AttachmentCount = Convert.ToInt32(reader.ReadUInt32());
+            reader.ReadBytes(8); // Reserved
+            ReadProperties(reader);
         }
 
         /// <summary>

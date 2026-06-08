@@ -35,14 +35,13 @@ namespace XstReader.Exporter.MsgKit.Streams
         internal GuidStream(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.GuidStream);
-
-            using (var memoryStream = new MemoryStream(stream.GetData()))
-            using (var binaryReader = new BinaryReader(memoryStream))
-                while (!binaryReader.Eos())
-                {
-                    var guid = new Guid(binaryReader.ReadBytes(16));
-                    Add(guid);
-                }
+            stream.Seek(0, SeekOrigin.Begin);
+            using BinaryReader reader = new(stream, System.Text.Encoding.UTF8, true);
+            while (!reader.Eos())
+            {
+                var guid = new Guid(reader.ReadBytes(16));
+                Add(guid);
+            }
         }
         #endregion
 
@@ -55,14 +54,11 @@ namespace XstReader.Exporter.MsgKit.Streams
         internal void Write(StorageAdapterBase storage)
         {
             var stream = storage.GetStream(PropertyTags.GuidStream);
-            using (var memoryStream = new MemoryStream())
-            using (var binaryWriter = new BinaryWriter(memoryStream))
-            {
-                foreach (var guid in this)
-                    binaryWriter.Write(guid.ToByteArray());
-
-                stream.SetData(memoryStream.ToArray());
-            }
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.SetLength(0);
+            using BinaryWriter writer = new(stream, System.Text.Encoding.UTF8, true);
+            foreach (var guid in this)
+                writer.Write(guid.ToByteArray());
         }
         #endregion
     }

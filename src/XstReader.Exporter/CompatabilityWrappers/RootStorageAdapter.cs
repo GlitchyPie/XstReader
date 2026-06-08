@@ -60,6 +60,12 @@ namespace XstReader.Exporter.CompatabilityWrappers
         {
             return new CfbStreamAdapter(_root.CreateStream(name), name, _root);
         }
+        public override void AddData(string name, byte[] data)
+        {
+            using CfbStream stream = _root.CreateStream(name);
+            stream.Write(data, 0, data.Length);
+
+        }
         public override CfStreamAdapterBase GetStream(string name)
         {
             return new CfbStreamAdapter(_root.OpenStream(name), name, _root);
