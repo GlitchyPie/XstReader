@@ -50,7 +50,7 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     the given <see cref="CfStreamAdapterBase"/>
         /// </summary>
         /// <param name="stream">The <see cref="CfbStream"/></param>
-        internal AttachmentProperties(CfStreamAdapterBase stream)
+        internal AttachmentProperties(CfbStream stream)
         {
             stream.Seek(0, SeekOrigin.Begin); // Could this be Seek(9) instead?
             using BinaryReader reader = new(stream, System.Text.Encoding.UTF8, true);

@@ -30,33 +30,18 @@ namespace XstReader.Exporter.CompatabilityWrappers
             }
             return false;
         }
-        public override bool TryGetStream(string name, out CfbStreamAdapter? stream)
+        public override bool TryGetStream(string name, out CfbStream stream)
         {
-            bool r = _store.TryOpenStream(name, out CfbStream? str);
-            if (r)
-            {
-                stream = new CfbStreamAdapter(str,name, _store);
-                return true;
-            }
-            else if (str != null)
-            {
-                stream = new CfbStreamAdapter(str,name, _store);
-            }
-            else
-            {
-                stream = null;
-            }
-            return false;
-
+            return _store.TryOpenStream(name, out stream);
         }
 
         public override StorageAdapter AddStorage(string name)
         {
             return new StorageAdapter(_store.CreateStorage(name));
         }
-        public override CfbStreamAdapter AddStream(string name)
+        public override CfbStream AddStream(string name)
         {
-            return new CfbStreamAdapter(_store.CreateStream(name), name, _store);
+            return _store.CreateStream(name);
         }
         public override void AddData(string name, byte[] data)
         {
@@ -69,9 +54,9 @@ namespace XstReader.Exporter.CompatabilityWrappers
         {
             return new StorageAdapter(_store.OpenStorage(name));
         }
-        public override CfStreamAdapterBase GetStream(string name)
+        public override CfbStream GetStream(string name)
         {
-            return new CfbStreamAdapter(_store.OpenStream(name), name, _store);
+            return _store.OpenStream(name);
         }
 
     }

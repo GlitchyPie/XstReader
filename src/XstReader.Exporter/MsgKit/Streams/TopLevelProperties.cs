@@ -65,7 +65,7 @@ namespace XstReader.Exporter.MsgKit.Streams
         ///     the given <see cref="CfbStream"/>
         /// </summary>
         /// <param name="stream">The <see cref="CfbStream"/></param>
-        internal TopLevelProperties(CfStreamAdapterBase stream)
+        internal TopLevelProperties(CfbStream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
             using BinaryReader reader = new(stream, System.Text.Encoding.UTF8, true);
